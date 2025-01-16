@@ -16,7 +16,7 @@ target_include_directories(imgui INTERFACE
     .
     )
 
-target_include_directories(imgui PRIVATE
+target_include_directories(imgui PUBLIC
     imgui
     )
 
@@ -32,10 +32,11 @@ if (EMSCRIPTEN)
     add_library(imgui-sdl2
         imgui-extra/imgui_impl.cpp
         imgui/backends/imgui_impl_sdl.cpp
+        imgui/backends/imgui_impl_sdlrenderer.cpp
         imgui/backends/imgui_impl_opengl3.cpp
         )
 
-    target_include_directories(imgui-sdl2 PRIVATE
+    target_include_directories(imgui-sdl2 PUBLIC
         imgui
         imgui-extra
         )
@@ -49,6 +50,7 @@ else()
     add_library(imgui-sdl2
         imgui-extra/imgui_impl.cpp
         imgui/backends/imgui_impl_sdl.cpp
+        imgui/backends/imgui_impl_sdlrenderer.cpp
         imgui/backends/imgui_impl_opengl3.cpp
         )
 
@@ -56,7 +58,7 @@ else()
         ${SDL2_INCLUDE_DIRS}
         )
 
-    target_include_directories(imgui-sdl2 PRIVATE
+    target_include_directories(imgui-sdl2 PUBLIC
         imgui
         imgui-extra
         )

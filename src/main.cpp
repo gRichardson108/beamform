@@ -152,13 +152,13 @@ bool AppInterface::init(StateSDL & stateSDL, StateCore & stateCore) {
             }
 
             if (nUpdates >= 0) {
-                if (ImGui::NewFrame(stateSDL.window) == false) {
+                if (AppCommon::NewFrame(stateSDL.window) == false) {
                     return false;
                 }
 
-                stateCore.render();
+                stateCore.render(stateSDL.window);
 
-                if (ImGui::EndFrame(stateSDL.window) == false) {
+                if (AppCommon::EndFrame(stateSDL.window) == false) {
                     return false;
                 }
             }

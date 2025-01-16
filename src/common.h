@@ -1,6 +1,7 @@
 #pragma once
 
 #include <imgui/imgui.h>
+#include <cstdint>
 
 #include <string>
 
@@ -8,7 +9,7 @@ struct SDL_Window;
 
 // various common functions and structures
 
-namespace ImGui {
+namespace AppCommon {
 
 struct FontInfo {
     const std::string filename; // use empty string to load default font

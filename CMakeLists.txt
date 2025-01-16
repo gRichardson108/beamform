@@ -1,5 +1,5 @@
 cmake_minimum_required (VERSION 3.10)
-project(GGWeb)
+project(beamform)
 
 set(OpenGL_GL_PREFERENCE "GLVND")
 

@@ -3,6 +3,9 @@
 #include "icons-font-awesome.h"
 
 #include <cmath>
+#include <numeric>
+#include <complex>
+#include <SDL.h>
 
 namespace {
 
@@ -48,13 +51,26 @@ void StateCore::init(float fontScale) {
     isInitialized = true;
 }
 
-void StateCore::render() {
+int is_in_set(std::complex<double> c) {
+    std::complex<double> z(0,0);
+    for (int i = 0; i < 25; i++) {
+        z = std::pow(z, 2) + c;
+        if (std::norm(z) > 10) {
+            // could be used for generating a color
+            return i;
+        }
+    }
+    // 0 = was inside the set
+    return 0;
+}
+
+void StateCore::render(SDL_Window* window) {
     // shortcuts
     const auto & T     = rendering.T;
     const auto & wSize = rendering.wSize;
 
     if (rendering.isFirstFrame) {
-        ImGui::SetStyle();
+        AppCommon::SetStyle();
 
         rendering.isFirstFrame = false;
     }
@@ -63,7 +79,7 @@ void StateCore::render() {
     {
         ImGui::SetNextWindowPos({ 0.0f, 0.0f });
         ImGui::SetNextWindowSize(ImGui::GetIO().DisplaySize);
-        ImGui::BeginBorderless("background", NULL,
+        AppCommon::BeginBorderless("background", NULL,
                                ImGuiWindowFlags_NoNav |
                                ImGuiWindowFlags_NoNavFocus |
                                ImGuiWindowFlags_NoBringToFrontOnFocus |
@@ -95,7 +111,6 @@ void StateCore::render() {
             drawList->AddRectFilled({ 0.0f, wSize.y - 6.0f, }, { 6.0f, wSize.y, }, ImGui::ColorConvertFloat4ToU32({ 1.0f, 1.0f, 0.0f, 1.0f, }));
         }
     }
-
     // layer with controls
     {
         ImGui::SetNextWindowPos({ 0.0f, 0.0f });
@@ -108,7 +123,7 @@ void StateCore::render() {
 
         {
             // select font
-            ImGui::FontSentry sentry(0, 1.0f/fontScale);
+            AppCommon::FontSentry sentry(0, 1.0f/fontScale);
 
             ImGui::Text("Window size: %6.3f %6.3f\n", wSize.x, wSize.y);
             ImGui::Text("Mouse down duration: %g\n", ImGui::GetIO().MouseDownDuration[0]);
@@ -117,17 +132,17 @@ void StateCore::render() {
             ImGui::Checkbox("Show circle", &showCircle);
 
             ImGui::Button("Push data to JS", { 200.0f, 24.0f });
-            if (ImGui::IsItemHovered(ImGuiHoveredFlags_None) && ImGui::IsMouseJustPressed(0)) {
+            if (ImGui::IsItemHovered(ImGuiHoveredFlags_None) && AppCommon::IsMouseJustPressed(0)) {
                 updateDataDummy();
             }
 
             ImGui::Button("Copy to clipboard", { 200.0f, 24.0f });
-            if (ImGui::IsItemHovered(ImGuiHoveredFlags_None) && ImGui::IsMouseJustPressed(0)) {
+            if (ImGui::IsItemHovered(ImGuiHoveredFlags_None) && AppCommon::IsMouseJustPressed(0)) {
                 dataClipboard = "Some clipboard data from the native app";
             }
 
             ImGui::Button("Open https://google.com", { 200.0f, 24.0f });
-            if (ImGui::IsItemHovered(ImGuiHoveredFlags_None) && ImGui::IsMouseJustPressed(0)) {
+            if (ImGui::IsItemHovered(ImGuiHoveredFlags_None) && AppCommon::IsMouseJustPressed(0)) {
                 dataURL = "https://google.com";
             }
         }

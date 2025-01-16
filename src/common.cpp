@@ -4,6 +4,8 @@
 
 #include <imgui/imgui.h>
 #include <imgui-extra/imgui_impl.h>
+#include <imgui/backends/imgui_impl_sdl.h>
+#include <imgui/backends/imgui_impl_sdlrenderer.h>
 
 #include <SDL.h>
 #include <SDL_opengl.h>
@@ -12,7 +14,7 @@
 #include <vector>
 #include <array>
 
-namespace ImGui {
+namespace AppCommon {
 
 namespace {
 
@@ -58,7 +60,8 @@ bool TryLoadFont(const FontInfo & fontInfo) {
 
 
 bool NewFrame(SDL_Window * window) {
-    ImGui_NewFrame(window);
+    ImGui_ImplSDLRenderer_NewFrame();
+    ImGui_ImplSDL2_NewFrame();
     ImGui::NewFrame();
 
     return true;
@@ -68,16 +71,22 @@ bool EndFrame(SDL_Window * window) {
     // Rendering
     int display_w, display_h;
     SDL_GetWindowSize(window, &display_w, &display_h);
-    glViewport(0, 0, display_w, display_h);
-    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
+    
 
     ImGui::Render();
-    ImGui_RenderDrawData(ImGui::GetDrawData());
+    
+    SDL_Renderer* renderer = SDL_GetRenderer(window);
+    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+    SDL_RenderClear(renderer);
 
-    SDL_GL_SwapWindow(window);
+    ImGui_ImplSDLRenderer_RenderDrawData(ImGui::GetDrawData());
 
-    ImGui::EndFrame();
+    // render here to render on top of ImGui.
+    SDL_FRect rect = {200.0f, 0.0f, 255.0f, 255.0f};
+    SDL_RenderFillRectF(renderer, &rect);
+
+    SDL_RenderPresent(renderer);
+
 
     return true;
 }

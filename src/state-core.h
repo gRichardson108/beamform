@@ -6,6 +6,7 @@
 
 #include <string>
 
+struct SDL_Window;
 // helper struct to manage the rendering state
 struct Rendering {
     float T = 0.0f;
@@ -66,7 +67,7 @@ struct StateCore {
     void init(float fontScale);
 
     // main render function
-    void render();
+    void render(SDL_Window* window);
 
     // called before rendering the new frame
     bool updatePre();
