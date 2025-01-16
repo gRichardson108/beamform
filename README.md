@@ -3,6 +3,8 @@ This is currently a playground for some rendering techniques. At this time I'm j
 working on native + web, but the end goal is to do some beamforming simulations, kind of like this youtube video:
 https://www.youtube.com/watch?v=VOGjHxlisyo
 
+The web version of this is temporarily hosted here: https://triangle-null.com
+
 ## GGWeb
 This application is templated off of GGWEB, found here:
 https://github.com/ggerganov/ggweb
